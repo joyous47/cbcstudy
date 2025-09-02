@@ -7,7 +7,8 @@ export function useAuth() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Get initial session
+
+    // Normal auth flow
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session?.user) {
         fetchUserProfile(session.user.id);
@@ -16,7 +17,6 @@ export function useAuth() {
       }
     });
 
-    // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         if (session?.user) {
@@ -56,7 +56,12 @@ export function useAuth() {
     return { error };
   };
 
-  const signUp = async (email: string, password: string, fullName: string, role: 'student' | 'teacher') => {
+  const signUp = async (
+    email: string,
+    password: string,
+    fullName: string,
+    role: 'student' | 'teacher'
+  ) => {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -74,7 +79,8 @@ export function useAuth() {
             full_name: fullName,
             role,
           },
-        ]);
+        ])
+        .select(); // ✅ ensures JSON response
 
       if (profileError) return { error: profileError };
     }

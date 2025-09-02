@@ -12,6 +12,8 @@ function App() {
   return (
     <Router>
       <Routes>
+        <Route path="/dashboard-dev" element={<Dashboard />} />
+
         <Route path="/auth" element={<AuthPage />} />
         <Route path="/" element={<Layout />}>
           <Route index element={<Navigate to="/dashboard" replace />} />
